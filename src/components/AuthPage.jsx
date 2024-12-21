@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';  // Required for integrating Zod with react-hook-form
 import * as z from 'zod';
 import { AuthFormSchema } from '../utils/schema/AuthFormSchema';
+import { useLogin, useRegister } from '../hooks/useAuth';
 
 const AuthPage = (props) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,14 +19,22 @@ const AuthPage = (props) => {
     resolver: zodResolver(AuthFormSchema),
   });
 
+  const { mutate: login, error: loginError } = useLogin();
+  const { mutate: registerUser, error: registerError } = useRegister();
+
   const handleAuthToggle = () => {
     // Toggle between login and sign-up pages
     setIsLogin(!isLogin);
-    navigate(isLogin ? '/auth/signup' : '/auth/login');
+    navigate(isLogin ? '/revisify/auth/signup' : '/revisify/auth/login');
   };
 
-  const onSubmit = (data) => {
-    console.log('Form Submitted:', data);
+  const onSubmit = async (data) => {
+    debugger
+    if (isLogin) {
+      await login(data);
+    } else {
+     await registerUser(data);
+    }
   };
 
   return (

@@ -12,7 +12,7 @@ const WelcomePage = () => {
     We're glad to have you here. Revisify is the place to revise, learn, and grow! Get started and explore the amazing features we offer.
   </p>
   <div className="mt-8 flex justify-center items-center">
-    <Link to="/auth/login" className="px-6 py-3 bg-white text-teal-600 rounded-full text-lg font-semibold hover:bg-teal-100 transition-all">
+    <Link to="/revisify/auth/login" className="px-6 py-3 bg-white text-teal-600 rounded-full text-lg font-semibold hover:bg-teal-100 transition-all">
       Get Started
     </Link>
   </div>
