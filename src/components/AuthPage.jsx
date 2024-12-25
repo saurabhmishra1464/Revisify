@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';  // Required for integrating Zod with react-hook-form
 import * as z from 'zod';
-import { AuthFormSchema } from '../utils/schema/AuthFormSchema';
-import { useLogin, useRegister } from '../hooks/useAuth';
+import {LoginFormSchema, RegisterFormSchema } from '../utils/schema/AuthFormSchema';
+import { useLogin, useRegister, useVerifyEmail } from '../hooks/useAuth';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AuthPage = (props) => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const emailRef = useRef();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(AuthFormSchema),
+  const schema = isLogin ? LoginFormSchema : RegisterFormSchema;
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schema),
   });
 
-  const { mutate: login, error: loginError } = useLogin();
-  const { mutate: registerUser, error: registerError } = useRegister();
+  const { mutate: login } = useLogin();
+
+  const { mutate: registerUser } = useRegister();
 
   const handleAuthToggle = () => {
     // Toggle between login and sign-up pages
@@ -29,11 +30,23 @@ const AuthPage = (props) => {
   };
 
   const onSubmit = async (data) => {
-    debugger
-    if (isLogin) {
-      await login(data);
-    } else {
-     await registerUser(data);
+    try {
+      if (isLogin) {
+        await login(data);
+      } else {
+        emailRef.current = data.email; // Capture the email input data
+        await registerUser(data, {
+          onSuccess: () => {
+            toast.success('Registration successful!');
+            navigate('/revisify/auth/signupconfirmation', { state: { email: emailRef.current } });
+          },
+          onError: (error) => {
+            toast.error(error.message || 'An error occurred during registration.');
+          },
+        });
+      }
+    } catch (error) {
+      toast.error(error?.message || 'Something went wrong');
     }
   };
 
@@ -65,8 +78,27 @@ const AuthPage = (props) => {
               )}
             </div>
           )}
-  
-          {/* Email field */}
+  {isLogin && (
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-600 mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter your username"
+              className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none transition duration-300"
+              {...register('username')}
+            />
+            {errors.username && (
+              <span className="text-red-500 text-xs sm:text-sm mt-1 block">
+                {errors.username.message?.toString()}
+              </span>
+            )}
+          </div>
+        )}
+         
+         {!isLogin && (
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-2">
               Email
@@ -75,8 +107,8 @@ const AuthPage = (props) => {
               type="email"
               id="email"
               placeholder="Enter your email"
-              {...register('email')}
               className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none transition duration-300"
+              {...register('email')}
             />
             {errors.email && (
               <span className="text-red-500 text-xs sm:text-sm mt-1 block">
@@ -84,7 +116,7 @@ const AuthPage = (props) => {
               </span>
             )}
           </div>
-  
+        )}
           {/* Password field */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-2">
