@@ -1,21 +1,19 @@
 import axios from '../utils/axiosInstance';
+import { handleApiResponse } from './handleApiResponse';
 
 export const registerUser = async (data) => {
-    debugger
-    try {
-      const response = await axios.post('/Auth/Register', data);
-      return response.data; // Return the actual data from the response
-    } catch (error) {
-      debugger
-      throw new Error(error.response?.data?.message || 'Error occurred during registration');
-    }
-  };
+  return await handleApiResponse(() => axios.post('/Auth/Register', data));
+};
 
-  export const loginUser = async (data) => {
-    try {
-      const response = await axios.post('/Auth/login', data);
-      return response.data; // Return the actual data from the response
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Error occurred during login');
-    }
-  };
+export const loginUser = async (data) => {
+  return await handleApiResponse(() => axios.post('/Auth/login', data));
+};
+
+export const verifyEmail = async ({token, email}) => {
+  return await handleApiResponse(() =>  axios.get('/Auth/VerifyEmail', { params: { token, email } }));
+};
+
+export const sendConfirmationEmail = async (email) => {
+  debugger
+  return await handleApiResponse(() =>  axios.post('/Auth/SendConfirmationEmail',  {email} ));
+};
