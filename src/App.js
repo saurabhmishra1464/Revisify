@@ -10,6 +10,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VerifyEmail from './components/VerifyEmail';
 import SignupConfirmation from './components/SignupConfirmation';
+import UserDashboard from './components/UserDashboard';
+import AdminDashboard from './components/AdminDashboard';
+import PracticeSessions from './components/ManagePracticeSessions';
 // const SignupPage = React.lazy(() => import('./pages/SignupPage'));
 // const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
 // const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
@@ -24,7 +27,10 @@ function App() {
         <Route path="/revisify/auth/login" element={<AuthPage isLogin={true} />} />
         <Route path="/revisify/auth/signup" element={<AuthPage isLogin={false} />} />
         <Route path='/revisify/auth/verifyEmail' element={<VerifyEmail />} />
+        <Route path='/revisify/userdashboard' element={<UserDashboard />} />
+        <Route path='/revisify/admindashboard' element={<AdminDashboard />} />
         <Route path='/revisify/auth/signupconfirmation' element={<SignupConfirmation />} />
+        <Route path='/revisify/practice-sessions' element={<PracticeSessions />} />
         </Routes>
       </Suspense>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { loginUser, registerUser, sendConfirmationEmail, verifyEmail } from '../api/auth';
+import { loginUser, registerUser, saveQuestion, sendConfirmationEmail, verifyEmail } from '../api/auth';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,12 +32,19 @@ export const useRegister = () => {
 
 export const useLogin = () => {
   debugger
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       debugger
+      const { roles } = data.data;
       // Success handler: Show success message in toast
       toast.success('Login successful!');
+      if (roles && roles.includes('Admin')) {
+        navigate('/revisify/admindashboard'); // Redirect to Admin Dashboard
+      } else if (roles && roles.includes('User')) {
+        navigate('/revisify/userdashboard'); // Redirect to User Dashboard
+      }
       // You can perform other actions here, such as redirecting the user
     },
     onError: (error) => {
@@ -77,6 +84,19 @@ export const useSendConfirmationEmail = () => {
     mutationFn: sendConfirmationEmail,
     onSuccess: () => {
       toast.success('Confirmation email sent successfully!');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'An error occurred while sending the confirmation email.');
+    },
+  });
+};
+
+export const useSaveQuestions = () => {
+  debugger
+  return useMutation({
+    mutationFn: saveQuestion,
+    onSuccess: () => {
+      toast.success('Questions Uploaded successfully!');
     },
     onError: (error) => {
       toast.error(error.message || 'An error occurred while sending the confirmation email.');
