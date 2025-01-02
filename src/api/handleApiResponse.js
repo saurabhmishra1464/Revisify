@@ -5,7 +5,7 @@ export const handleApiResponse = async (apiCall) => {
       const apiResponse = response.data;
       if (apiResponse.isSuccess) {
         debugger
-        return { success: true, data: apiResponse.Data, message: apiResponse.Message, statusCode: apiResponse.StatusCode };
+        return { success: apiResponse.isSuccess, data: apiResponse.data, message: apiResponse.message, statusCode: apiResponse.statusCode };
       } else {
         debugger
         throw new Error(apiResponse.Message || 'An error occurred');
