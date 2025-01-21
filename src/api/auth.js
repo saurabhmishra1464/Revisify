@@ -24,6 +24,11 @@ export const fetchSubjects  = async () => {
   return response.data;
 };
 
+export const fetchQuestions = async (subjectId) => {
+  const response = await handleApiResponse(() => axios.get(`/Auth/GetAllQuestions?subjectId=${subjectId}`)); // Replace with your API endpoint
+  return response.data;
+};
+
 export const saveQuestion = async ({ file, subjectId }) => {
   debugger;
   return await handleApiResponse(() => {

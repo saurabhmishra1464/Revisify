@@ -16,8 +16,13 @@ const AdminDashboardLayout = ({ children }) => {
               </Link>
             </li>
             <li className="p-4 hover:bg-blue-800">
-              <Link to="/revisify/practice-sessions" className="block">
+              <Link to="/revisify/admindashboard/manage-practice-sessions" className="block">
                 Manage Practice Sessions
+              </Link>
+            </li>
+            <li className="p-4 hover:bg-blue-800">
+              <Link to="/revisify/admindashboard/question-list" className="block">
+                Question List
               </Link>
             </li>
             <li className="p-4 hover:bg-blue-800">
