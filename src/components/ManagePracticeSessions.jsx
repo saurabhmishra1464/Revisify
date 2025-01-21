@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchSubjects } from "../api/auth";
 import { useSaveQuestions } from "../hooks/useAuth";
 
-const PracticeSessions = () => {
+const ManagePracticeSessions = () => {
   const [questions, setQuestions] = useState([]);
   const [currentSubjectId, setCurrentSubjectId] = useState("");
   const { mutateAsync } = useSaveQuestions();
@@ -13,6 +13,8 @@ const PracticeSessions = () => {
   const { data: subjects = [], isLoading, error } = useQuery({
     queryKey: ["subjects"],
     queryFn: fetchSubjects,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 console.log(subjects, "This is subject");
   const handleAddQuestion = () => {
@@ -178,4 +180,4 @@ console.log(subjects, "This is subject");
   );
 };
 
-export default PracticeSessions;
+export default ManagePracticeSessions;
